@@ -1,0 +1,46 @@
+import React, { useState } from 'react'; import { View, Text, TextInput, StyleSheet, Button, Picker, ScrollView } from 'react-native';
+
+const mutationMultipliers = { none: 1, wet: 2, gold: 20, shocked: 50, rainbow: 50, celestial: 120, voidtouched: 135, disco: 125, };
+
+export default function CandyBlossomCalculator() { const [weight, setWeight] = useState('1'); const [mutation, setMutation] = useState('none'); const [pricePerKg, setPricePerKg] = useState(null);
+
+const basePrice = 90250;
+
+const calculate = () => { const w = parseFloat(weight); if (!w || w <= 0) return; const multiplier = mutationMultipliers[mutation]; const result = (basePrice * multiplier) / w; setPricePerKg(result); };
+
+return ( <ScrollView contentContainerStyle={styles.container}> <Text style={styles.label}>น้ำหนัก (kg)</Text> <TextInput
+style={styles.input}
+keyboardType="decimal-pad"
+value={weight}
+onChangeText={setWeight}
+placeholder="กรอกน้ำหนัก"
+/>
+
+<Text style={styles.label}>ชนิด Mutation</Text>
+  <Picker
+    selectedValue={mutation}
+    onValueChange={(itemValue) => setMutation(itemValue)}
+    style={styles.picker}
+  >
+    <Picker.Item label="ไม่มี" value="none" />
+    <Picker.Item label="Wet (2x)" value="wet" />
+    <Picker.Item label="Gold (20x)" value="gold" />
+    <Picker.Item label="Shocked (50x)" value="shocked" />
+    <Picker.Item label="Rainbow (50x)" value="rainbow" />
+    <Picker.Item label="Celestial (120x)" value="celestial" />
+    <Picker.Item label="Voidtouched (135x)" value="voidtouched" />
+    <Picker.Item label="Disco (125x)" value="disco" />
+  </Picker>
+
+  <Button title="คำนวณ" onPress={calculate} />
+
+  {pricePerKg !== null && (
+    <Text style={styles.result}>
+      ราคาต่อกิโลกรัม: {pricePerKg.toLocaleString()} Sheckles
+    </Text>
+  )}
+</ScrollView>
+
+); }
+
+const styles = StyleSheet.create({ container: { padding: 20, alignItems: 'stretch', }, label: { fontSize: 16, marginBottom: 4, marginTop: 12, }, input: { borderWidth: 1, borderColor: '#ccc', padding: 10, borderRadius: 5, marginBottom: 12, }, picker: { height: 50, marginBottom: 20, }, result: { marginTop: 20, fontSize: 18, fontWeight: 'bold', textAlign: 'center', }, });
